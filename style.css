@@ -129,8 +129,11 @@ ul {
 @media (max-width: 768px) {
     body {
         background-image: url("img/mar-icemobile.png");
-        background-size: contain;
-        background-position: top center;
-        background-repeat: repeat;
     }
+}
+
+.mobile-img {
+    width: 100%;
+    height: auto;
+    display: block;
 }
