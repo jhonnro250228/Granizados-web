@@ -131,6 +131,6 @@ ul {
         background-image: url("img/mar-icemobile.png");
         background-size: contain;
         background-position: top center;
-        background-repeat: no-repeat;
+        background-repeat: repeat;
     }
 }
