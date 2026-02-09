@@ -2,7 +2,7 @@ body {
     margin: 0;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     overflow-x: hidden;
-    background-color: black;
+    background-color: rgba(0, 170, 255, 0.804);
     color: white;
     }
 
@@ -108,13 +108,50 @@ ul {
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 40px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 40px 10px rgba(0, 0, 0, 0.4);
     z-index: 1000;
+
+    animation: pulse 2s infinite;
 }
 
 .whatsapp-float img {
     width: 35px;
     height: 35px;
+}
+
+.whatsapp-float:hover {
+    animation-play-state: paused;
+}
+
+.whatsapp-float::after {
+    content: "Escribenos";
+    position: absolute;
+    right: 70px;
+    background: #25D366;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    opacity: 0;
+    white-space: nowrap;
+}
+
+.whatsapp-float:hover::after {
+    opacity: 1;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6);
+    }
+    70% {
+        transform: scale(1.08);
+        box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);   
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 .proyecto {
@@ -132,24 +169,33 @@ ul {
 
 .hero {
     position: relative;
-    text-align: center;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
 }
 
 .hero-img {
+    position: absolute;
     width: 100%;
-    height: auto;
-    display: block;
+    height: 100%;
+    object-fit: cover;
+
+    animation: zoomHero 12s ease-in-out infinite alternate;
 }
 
-.hero-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 20px;
-    border-radius: 15px;
+@keyframes zoomHero {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.4);
+    }
 }
 
 .menu-grod {

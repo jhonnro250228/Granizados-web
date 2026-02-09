@@ -8,15 +8,10 @@
     <meta name='viewport' content='width=device-width, initial-scale=1.0'/>
 </head>
 <body>
-    <div class="content">
     <section class="hero">
        <img src="img/mar-ice.png" class="hero-img">
-
-       <div class="hero-text">
-        <h1>Mar-Ice</h1>
-        <p>Refresca tu dia</p>
-       </div>
     </section>
+    <div class="content">
      <p>Granizados que refrescan de verdad</p>
      <p>Horario: Lunes a Domingo de 11:00 a 18:00</p>
      <p>Direccion: Carrera 5 # 7-03, Restrepo-Meta</p>
@@ -81,10 +76,34 @@
         </p>
     </div>
 <a 
-    href="https://wa.me/573104224157?text=Hola%20quiero%20realizar%20un%20pedido"
+    href="https://wa.me/573104224157?text=Hola%20quiero%20mas%20informacion%20sobre%20los%20Granizados"
     target="_blank"
     class="whatsapp-float">
     <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
 </a>
+<script>
+    document.getElementById("pedidoForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const nombre=document.getElementById("nombre").value;
+        const telefono=document.getElementById("telefono").value;
+        const producto=document.getElementById("producto").value;
+        const Topping=document.getElementById("Topping").value;
+        const Chupeta=document.getElementById("chupeta").value;
+        const Mensaje=document.getElementById("mensaje").value;
+
+        const texto= `Hola soy ${nombre}
+        Teléfono: ${telefono}
+        Quiero pedir: ${producto}
+        con Topping: ${topping}
+        y Chupeta: ${chupeta}
+        Mensaje: ${mensaje}`;
+
+        const url="https://wa.me/573104224157?text=" + encodeURIComponent(texto);
+
+        window.open(url, "_blank");
+
+    });
+</script>
 </body>
 </html>
