@@ -1,0 +1,13 @@
+{
+  "name": "Mar Ice Granizados",
+  "short_name": "MarIce",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ff5722",
+  "icons": [{
+    "src": "img/icon.png",
+    "sizes": "512x512",
+    "type": "image/png"
+  }]
+}
