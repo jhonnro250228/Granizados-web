@@ -8,6 +8,7 @@
     <meta name='viewport' content='width=device-width, initial-scale=1.0'/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ff4d6d">
 </head>
 <body>
     <section class="hero">
@@ -127,5 +128,10 @@
     <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
 </a>
 <script src="script.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js");
+}
+</script>
 </body>
 </html>
