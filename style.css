@@ -84,7 +84,7 @@ button{
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    transition: bakground-color 0.3s;
+    transition: background-color 0.3s;
 }
 
 button:hover {
@@ -106,7 +106,7 @@ h1, h2, h3{
     justify-content: center;
 }
 
-@media (max-width: 600) {
+@media (max-width: 600px) {
     .content {
         margin: 20px;
         padding: 15px;
@@ -302,6 +302,19 @@ ul {
     transform: scale(1.08);
 }
 
+.card h3{
+  font-size:20px;
+}
+
+.card::after{
+  content:"$8.000";
+  display:block;
+  font-weight:bold;
+  font-size:22px;
+  color:#25D366;
+  margin-bottom:10px;
+}
+
 form {
     display: flex;
     flex-direction: column;
@@ -372,12 +385,13 @@ button {
 }
 
 .acciones button:first-child{
-    background:#ff5722;
-    color:white;
+  background:#25D366;
+  font-size:16px;
+  padding:12px;
 }
 
 .acciones button:last-child{
-    background:#ff5722;;
+    background:#ff4081;;
 }
 
 .carrito {

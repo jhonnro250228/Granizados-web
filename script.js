@@ -1,27 +1,39 @@
-document.getElementById("pedidoForm").addEventListener("submit", function(e) {
-        e.preventDefault();
+// =============================
+// FORMULARIO SHEETS
+// =============================
+document.getElementById("pedidoForm").addEventListener("submit", function(e){
 
-        const nombre=document.getElementById("nombre").value;
-        const telefono=document.getElementById("telefono").value;
-        const producto=document.getElementById("producto").value;
-        const Topping=document.getElementById("Topping").value;
-        const Chupeta=document.getElementById("Chupeta").value;
-        const Mensaje=document.getElementById("Mensaje").value;
+  e.preventDefault();
 
-        const texto= `Hola soy ${nombre}
-        Teléfono: ${telefono}
-        Quiero pedir: ${producto}
-        con Topping: ${topping}
-        y Chupeta: ${chupeta}
-        Mensaje: ${mensaje}`;
+  const nombre   = document.getElementById("nombre").value;
+  const telefono = document.getElementById("telefono").value;
+  const producto = document.getElementById("producto").value;
+  const topping  = document.getElementById("Topping").value;
+  const chupeta  = document.getElementById("Chupeta").value;
+  const mensaje  = document.getElementById("Mensaje").value;
 
-        const url="https://wa.me/573104224157?text=" + encodeURIComponent(texto);
+  const datos = {
+    nombre,
+    telefono,
+    producto,
+    topping,
+    chupeta,
+    mensaje,
+    total
+  };
 
-        window.open(url, "_blank");
+  // 👉 guardar en Google Sheets
+  guardarEnSheets(datos);
 
-    });
+  alert("Pedido enviado ✅");
 
-    function filtrar(sabor){
+});
+
+
+// =============================
+// FILTROS
+// =============================
+function filtrar(sabor){
   const cards = document.querySelectorAll('.card');
 
   cards.forEach(card => {
@@ -33,6 +45,10 @@ document.getElementById("pedidoForm").addEventListener("submit", function(e) {
   });
 }
 
+
+// =============================
+// CARRITO + LOCALSTORAGE
+// =============================
 let carrito = JSON.parse(localStorage.getItem("carrito")) || {};
 let total = parseInt(localStorage.getItem("total")) || 0;
 let contador = parseInt(localStorage.getItem("contador")) || 0;
@@ -42,12 +58,8 @@ actualizarUI();
 
 // ===== AGREGAR =====
 function agregarCarrito(nombre, precio, imagen){
-  document.querySelector(".carrito").style.transform = "scale(1.2)";
 
-setTimeout(()=>{
-  document.querySelector(".carrito").style.transform = "scale(1)";
-},200);
-    if(carrito[nombre]){
+  if(carrito[nombre]){
     carrito[nombre].cantidad++;
   } else {
     carrito[nombre] = { precio, cantidad: 1, imagen };
@@ -56,18 +68,16 @@ setTimeout(()=>{
   total += precio;
   contador++;
 
+  animarCarrito();
   guardarStorage();
   actualizarUI();
-
-  const btn = document.querySelector(".carrito");
-
-btn.style.transform="scale(1.25)";
-setTimeout(()=>btn.style.transform="scale(1)",150);
 }
 
 
 // ===== QUITAR =====
 function quitarProducto(nombre){
+
+  if(!carrito[nombre]) return;
 
   total -= carrito[nombre].precio;
   contador--;
@@ -94,7 +104,7 @@ function vaciarCarrito(){
 }
 
 
-// ===== GUARDAR LOCALSTORAGE =====
+// ===== GUARDAR STORAGE =====
 function guardarStorage(){
   localStorage.setItem("carrito", JSON.stringify(carrito));
   localStorage.setItem("total", total);
@@ -102,7 +112,7 @@ function guardarStorage(){
 }
 
 
-// ===== UI =====
+// ===== ACTUALIZAR UI =====
 function actualizarUI(){
 
   document.getElementById("total").textContent = total;
@@ -127,18 +137,31 @@ function actualizarUI(){
 }
 
 
-// ===== TOGGLE =====
+// ===== TOGGLE CARRITO =====
+document.getElementById("btnCarrito")
+  .addEventListener("click", toggleCarrito);
 function toggleCarrito(){
   document.getElementById("carritoLista").classList.toggle("hidden");
 }
 
 
-// ===== WHATSAPP =====
+// ===== ANIMACIÓN =====
+function animarCarrito(){
+  const btn = document.querySelector(".carrito");
+
+  btn.style.transform="scale(1.25)";
+  setTimeout(()=>btn.style.transform="scale(1)",150);
+}
+
+// ===== ENVIAR PEDIDO POR WHATSAPP =====
 function enviarPedido(){
 
-  if(total === 0) return;
+  if(contador === 0){
+    alert("Agrega productos primero 🙂");
+    return;
+  }
 
-  let mensaje = "Hola, quiero este pedido:%0A%0A";
+  let mensaje = "Hola, quiero pedir:%0A%0A";
 
   for(let nombre in carrito){
     mensaje += `${carrito[nombre].cantidad}x ${nombre}%0A`;
@@ -146,41 +169,34 @@ function enviarPedido(){
 
   mensaje += `%0ATotal: $${total}`;
 
-  window.open(`https://wa.me/573104224157?text=${mensaje}`, "_blank");
+  const telefono = "573104224157"; // tu número
+
+  const url = `https://wa.me/${telefono}?text=${mensaje}`;
+
+  window.open(url, "_blank");
 }
 
-const carritoBtn = document.querySelector(".carrito");
+// =============================
+// GOOGLE SHEETS
+// =============================
+function guardarEnSheets(datos){
 
-carritoBtn.style.transform = "scale(1.25)";
-setTimeout(()=> carritoBtn.style.transform="scale(1)", 150);
-
-function doPost(e){
-
-  const sheet = SpreadsheetApp.getActiveSheet();
-
-  const data = JSON.parse(e.postData.contents);
-
-  sheet.appendRow([
-    new Date(),
-    data.nombre,
-    data.telefono,
-    data.pedido,
-    data.total
-  ]);
-
-  return ContentService.createTextOutput("ok");
-}
-
-fetch("https://docs.google.com/spreadsheets/d/11KgJtfzP3tK263F3jevqSYknj1XLFcCCblppLQ4GD0Q/edit?gid=0#gid=0", {
-  method:"POST",
-  body: JSON.stringify({
-    nombre,
-    telefono,
-    pedido: mensaje,
-    total
+  fetch("https://script.google.com/macros/s/AKfycbyarUC47CH20wCIYY9kl7S4oG5XYrs0hH6pHeOshgCdfvJDxjx7HQS-kBqq62LiQvUr/exec", {
+    method: "POST",
+    body: JSON.stringify(datos)
   })
-});
-
-if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("service-worker.js");
+  .then(()=> console.log("Guardado en Sheets ✅"))
+  .catch(()=> console.log("Error Sheets ❌"));
 }
+
+
+// =============================
+// SERVICE WORKER (opcional PWA)
+// =============================
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("service-worker.js")
+    .then(() => console.log("SW activo"))
+    .catch(err => console.log("Error SW", err));
+}
+
+
