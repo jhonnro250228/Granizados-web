@@ -194,7 +194,7 @@ function guardarEnSheets(datos){
 // SERVICE WORKER (opcional PWA)
 // =============================
 if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("service-worker.js")
+  navigator.serviceWorker.register("sw.js")
     .then(() => console.log("SW activo"))
     .catch(err => console.log("Error SW", err));
 }
