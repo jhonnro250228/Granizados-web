@@ -1,6 +1,16 @@
-// =============================
-// FORMULARIO SHEETS
-// =============================
+// ============================
+// ESTADO INICIAL
+// ============================
+let carrito  = JSON.parse(localStorage.getItem("carrito")) || {};
+let total    = parseInt(localStorage.getItem("total")) || 0;
+let contador = parseInt(localStorage.getItem("contador")) || 0;
+
+actualizarUI();
+
+
+// ============================
+// FORMULARIO (Sheets + WhatsApp)
+// ============================
 document.getElementById("pedidoForm").addEventListener("submit", function(e){
 
   e.preventDefault();
@@ -12,69 +22,58 @@ document.getElementById("pedidoForm").addEventListener("submit", function(e){
   const chupeta  = document.getElementById("Chupeta").value;
   const mensaje  = document.getElementById("Mensaje").value;
 
-  const datos = {
-    nombre,
-    telefono,
-    producto,
-    topping,
-    chupeta,
-    mensaje,
-    total
-  };
+  const datos = { nombre, telefono, producto, topping, chupeta, mensaje, total };
 
-  // 👉 guardar en Google Sheets
   guardarEnSheets(datos);
 
-  alert("Pedido enviado ✅");
+  const texto = `
+Hola soy ${nombre}
+Teléfono: ${telefono}
+Producto: ${producto}
+Topping: ${topping}
+Chupeta: ${chupeta}
+Mensaje: ${mensaje}
+Total: $${total}
+`;
 
+  window.open("https://wa.me/573104224157?text=" + encodeURIComponent(texto), "_blank");
+  alert("Pedido enviado ✅");
 });
 
 
-// =============================
-// FILTROS
-// =============================
+// ============================
+// FILTRAR
+// ============================
 function filtrar(sabor){
-  const cards = document.querySelectorAll('.card');
-
-  cards.forEach(card => {
-    if(sabor === 'all' || card.dataset.sabor === sabor){
-      card.style.display = 'block';
-    } else {
-      card.style.display = 'none';
-    }
+  document.querySelectorAll(".card").forEach(card=>{
+    card.style.display = (sabor==="all" || card.dataset.sabor===sabor) ? "block":"none";
   });
 }
 
 
-// =============================
-// CARRITO + LOCALSTORAGE
-// =============================
-let carrito = JSON.parse(localStorage.getItem("carrito")) || {};
-let total = parseInt(localStorage.getItem("total")) || 0;
-let contador = parseInt(localStorage.getItem("contador")) || 0;
-
-actualizarUI();
-
-
-// ===== AGREGAR =====
+// ============================
+// CARRITO
+// ============================
 function agregarCarrito(nombre, precio, imagen){
-
-  if(carrito[nombre]){
-    carrito[nombre].cantidad++;
-  } else {
-    carrito[nombre] = { precio, cantidad: 1, imagen };
-  }
+  
+  if(carrito[nombre]) carrito[nombre].cantidad++;
+  else carrito[nombre] = {precio, cantidad:1, imagen};
 
   total += precio;
   contador++;
 
-  animarCarrito();
   guardarStorage();
   actualizarUI();
+
+  document.getElementById("carritoLista").classList.remove("hidden");
+  animarCarrito();
+
+// 🔊 SONIDO
+  const audio = document.getElementById("soundAdd");
+  audio.currentTime = 0;
+  audio.play().catch(()=>{});
 }
 
-
-// ===== QUITAR =====
 function quitarProducto(nombre){
 
   if(!carrito[nombre]) return;
@@ -84,27 +83,24 @@ function quitarProducto(nombre){
 
   carrito[nombre].cantidad--;
 
-  if(carrito[nombre].cantidad <= 0){
-    delete carrito[nombre];
-  }
+  if(carrito[nombre].cantidad<=0) delete carrito[nombre];
 
   guardarStorage();
   actualizarUI();
 }
 
-
-// ===== VACIAR =====
 function vaciarCarrito(){
   carrito = {};
   total = 0;
   contador = 0;
-
   guardarStorage();
   actualizarUI();
 }
 
 
-// ===== GUARDAR STORAGE =====
+// ============================
+// STORAGE
+// ============================
 function guardarStorage(){
   localStorage.setItem("carrito", JSON.stringify(carrito));
   localStorage.setItem("total", total);
@@ -112,91 +108,107 @@ function guardarStorage(){
 }
 
 
-// ===== ACTUALIZAR UI =====
+// ============================
+// UI
+// ============================
 function actualizarUI(){
 
   document.getElementById("total").textContent = total;
   document.getElementById("contador").textContent = contador;
 
   const items = document.getElementById("items");
-  items.innerHTML = "";
+  items.innerHTML="";
 
   for(let nombre in carrito){
 
-    const item = document.createElement("div");
-    item.className = "item-carrito";
+    const div=document.createElement("div");
+    div.className="item-carrito";
 
-    item.innerHTML = `
+    div.innerHTML=`
       <img src="${carrito[nombre].imagen}">
       <span>${carrito[nombre].cantidad}x ${nombre}</span>
       <button onclick="quitarProducto('${nombre}')">x</button>
     `;
 
-    items.appendChild(item);
+    items.appendChild(div);
   }
 }
 
 
-// ===== TOGGLE CARRITO =====
+// ============================
+// TOGGLE CARRITO
+// ============================
 document.getElementById("btnCarrito")
-  .addEventListener("click", toggleCarrito);
-function toggleCarrito(){
+.addEventListener("click", ()=> {
   document.getElementById("carritoLista").classList.toggle("hidden");
-}
+});
 
 
-// ===== ANIMACIÓN =====
+// ============================
+// ANIMACIÓN
+// ============================
 function animarCarrito(){
-  const btn = document.querySelector(".carrito");
-
-  btn.style.transform="scale(1.25)";
+  const btn=document.querySelector(".carrito");
+  btn.style.transform="scale(1.2)";
   setTimeout(()=>btn.style.transform="scale(1)",150);
 }
 
-// ===== ENVIAR PEDIDO POR WHATSAPP =====
+
+// ============================
+// WHATSAPP DESDE CARRITO
+// ============================
 function enviarPedido(){
 
-  if(contador === 0){
-    alert("Agrega productos primero 🙂");
-    return;
+  if(contador===0) return alert("Agrega productos primero 🙂");
+
+  let msg="Hola, quiero pedir:%0A%0A";
+
+  for(let n in carrito){
+    msg+=`${carrito[n].cantidad}x ${n}%0A`;
   }
 
-  let mensaje = "Hola, quiero pedir:%0A%0A";
+  msg+=`%0ATotal: $${total}`;
 
-  for(let nombre in carrito){
-    mensaje += `${carrito[nombre].cantidad}x ${nombre}%0A`;
-  }
-
-  mensaje += `%0ATotal: $${total}`;
-
-  const telefono = "573104224157"; // tu número
-
-  const url = `https://wa.me/${telefono}?text=${mensaje}`;
-
-  window.open(url, "_blank");
+  window.open(`https://wa.me/573104224157?text=${msg}`,"_blank");
 }
 
-// =============================
+
+// ============================
 // GOOGLE SHEETS
-// =============================
+// ============================
 function guardarEnSheets(datos){
 
-  fetch("https://script.google.com/macros/s/AKfycbyarUC47CH20wCIYY9kl7S4oG5XYrs0hH6pHeOshgCdfvJDxjx7HQS-kBqq62LiQvUr/exec", {
-    method: "POST",
-    body: JSON.stringify(datos)
-  })
-  .then(()=> console.log("Guardado en Sheets ✅"))
-  .catch(()=> console.log("Error Sheets ❌"));
+  fetch("https://script.google.com/macros/s/AKfycbyarUC47CH20wCIYY9kl7S4oG5XYrs0hH6pHeOshgCdfvJDxjx7HQS-kBqq62LiQvUr/exec",{
+    method:"POST",
+    body:JSON.stringify(datos)
+  });
 }
 
+//===================
+// BOTON INSTALAR APP
+//===================
+let deferredPrompt;
 
-// =============================
-// SERVICE WORKER (opcional PWA)
-// =============================
-if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("sw.js")
-    .then(() => console.log("SW activo"))
-    .catch(err => console.log("Error SW", err));
-}
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+
+  const btn = document.getElementById("btnInstalar");
+  btn.hidden = false;
+
+  btn.addEventListener("click", () => {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(() => {
+      btn.hidden = true;
+    });
+  });
+});
+
+// ===== SPLASH AUTO OCULTAR =====
+window.addEventListener("load", ()=>{
+  setTimeout(()=>{
+    document.getElementById("splash").style.display="none";
+  },1200);
+});
 
 

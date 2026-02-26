@@ -11,6 +11,9 @@
     <meta name="theme-color" content="#ff4d6d">
 </head>
 <body>
+    <div id="splash">
+        <img src="img/icono-512.png" alt="MAR-ICE">
+    </div>
     <section class="hero">
        <img src="img/mar-ice.png" class="hero-img">
 
@@ -127,13 +130,16 @@
     class="whatsapp-float">
     <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
 </a>
-<script src="script.js"></script>
+<button id="btnInstalar" hidden>📲 Instalar App</button>
 <script>
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js")
-    .then(() => console.log("Service Worker registrado"))
-    .catch(err => console.log("Error SW:", err));
+  navigator.serviceWorker.register("./sw.js");
 }
 </script>
+<audio id="soundAdd" src="./audio/pop.mp3" preload="auto"></audio>
+<script src="script.js"></script>
+<button onclick="document.getElementById('soundAdd').play()">
+Probar sonido
+</button>
 </body>
 </html>

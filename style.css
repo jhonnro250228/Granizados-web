@@ -1,3 +1,11 @@
+:root{
+  --azul:#00aaff;
+  --rosa:#ff4081;
+  --verde:#25D366;
+  --oscuro:#121212;
+  --blanco:#ffffff;
+}
+
 body {
     margin: 0;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -15,7 +23,7 @@ body {
 }
 
 .content {
-    background: rgba(0, 0, 0, 0.65);
+    background: #00000031;
     padding: 25px;
     max-width: 900px;
     margin: 30px auto;
@@ -29,13 +37,13 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    color: white;
 
-    background: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
+    background: rgba(0,0,0,.25);
+    backdrop-filter: blur(12px);
 
-    padding:30px;
-    border-radius:20px;
+    max-width: 320px;
+    padding:25px;
+    border-radius:18px;
 
     animation: fadeIn 1s ease;
 }
@@ -89,6 +97,7 @@ button{
 
 button:hover {
     background-color: #e68900;
+    transform:scale(1.05);
 }
 
 p, li, h1 {
@@ -234,16 +243,18 @@ ul {
 }
 
 .btn-hero {
-    display:inline-block;
+    display:block;
     margin-top:25px;
-    padding:14px 32px;
-    background:#ff4081;
+    padding:16px;
+    background:var(--rosa);
     color:white;
     font-weight:bold;
-    border-radius:12px;
+    border-radius:14px;
     text-decoration:none;
+    margin-top:20px;
     font-size:18px;
-    transition:0.3s;
+    font-weight:bold;
+    transition:0.25s;
 
     /* animación pulse */
     animation:pulse 2s infinite;
@@ -274,21 +285,19 @@ ul {
 }
 
 .card {
-    background: white;
-    border-radius: 18px;
+    background: var(--blanco);
+    border-radius: 20px;
     text-align: center;
     color: black;
     overflow:hidden;
-    box-shadow:0 8px 20px rgba(0,0,0,0.08);
+    box-shadow:0 8px 25px rgba(0,0,0,.12);
 
-    transition: transform 0.3s, box-shadow 0.3s;
-
-    cursor: pointer;
+    transition: .25s;
 }
 
 .card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    transform: translateY(-6px);
+    box-shadow: 0 15px 35px rgba(0,0,0,.2);
 }
 
 .card img {
@@ -360,9 +369,13 @@ button {
   right: 20px;
   background: #222;
   color: white;
-  padding: 10px 15px;
-  border-radius: 10px;
+  padding: 10px 20px;
+  border-radius: 30px;
   font-weight: bold;
+  cursor: pointer;
+  z-index: 100;
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+  
 
   transition: transform 0.15s;
 }
@@ -377,11 +390,10 @@ button {
 }
 
 .acciones button {
-  border:none;
-  padding:8px 14px;
-  border-radius:10px;
-  cursor:pointer;
-  font-weight:bold;
+  width:100%;
+  margin-top:8px;
+  padding:12px;
+  border-radius:20px;
 }
 
 .acciones button:first-child{
@@ -392,20 +404,6 @@ button {
 
 .acciones button:last-child{
     background:#ff4081;;
-}
-
-.carrito {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: #222;
-  color: white;
-  padding: 10px 15px;
-  border-radius: 12px;
-  cursor: pointer;
-  z-index: 100;
-  box-shadow:0 10px 25px rgba(0,0,0,0.2);
-
 }
 
 .badge {
@@ -496,8 +494,8 @@ html {
 @media (prefers-color-scheme: dark){
 
     body{
-        background:#121212;
-        color:white;
+        background: var(--oscuro);
+        
     }
 
     .card{
@@ -508,4 +506,27 @@ html {
     .carrito{
         background:#1e1e1e;
     }
+}
+
+/* SPLASH SCREEN */
+#splash{
+  position:fixed;
+  inset:0;
+  background:linear-gradient(135deg,#00aaff,#25D366);
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  z-index:9999;
+}
+
+#splash img{
+  width:120px;
+  animation:zoomSplash 1s ease infinite alternate;
+}
+
+@keyframes zoomSplash{
+  from{transform:scale(1)}
+  to{transform:scale(1.1)}
 }
