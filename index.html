@@ -139,5 +139,14 @@ if ("serviceWorker" in navigator) {
 </script>
 <audio id="soundAdd" src="./audio/pop.mp3" preload="auto"></audio>
 <script src="script.js"></script>
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "https://jhonnro250228.github.io/Granizados-web/",
+    });
+  });
+</script>
 </body>
 </html>
