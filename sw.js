@@ -7,7 +7,7 @@ const archivos = [
   "./script.js",
   "./img/icono-192.png",
   "./img/icono-512.png",
-
+  "./audio/pop.mp3"
 ];
 
 self.addEventListener("install", e => {
