@@ -148,10 +148,34 @@ OneSignalDeferred.push(async function(OneSignal) {
 
   await OneSignal.init({
     appId: "e33745ba-7aa0-4096-b367-1aa8de842ca5",
-    notifyButton: { enable: true }
+
+    notifyButton: {
+      enable: true
+    },
+
+    promptOptions: {
+      slidedown: {
+        prompts: [{
+          type: "push",
+          text: {
+            actionMessage: "Recibe promociones y descuentos 🍧",
+            acceptButton: "Sí quiero",
+            cancelButton: "Después"
+          }
+        }]
+      }
+    },
+
+    welcomeNotification: {
+      title: "MAR-ICE",
+      message: "Gracias por suscribirte 🎉"
+    }
+
   });
 
-  await OneSignal.showSlidedownPrompt();
+  setTimeout(() => {
+    OneSignal.showSlidedownPrompt();
+  }, 4000);
 
 });
 </script>
