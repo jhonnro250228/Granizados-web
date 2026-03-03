@@ -211,6 +211,3 @@ window.addEventListener("load", ()=>{
   },1200);
 });
 
-OneSignalDeferred.push(async function(OneSignal) {
-  await OneSignal.showSlidedownPrompt();
-});

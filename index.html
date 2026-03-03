@@ -134,11 +134,10 @@
 <button id="btnInstalar" hidden>📲 Instalar App</button>
 <script>
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js");
+  navigator.serviceWorker.register("./pwa-sw.js");
 }
 </script>
 <audio id="soundAdd" src="./audio/pop.mp3" preload="auto"></audio>
-<script src="script.js"></script>
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 
 <script>
@@ -179,5 +178,6 @@ OneSignalDeferred.push(async function(OneSignal) {
 
 });
 </script>
+<script src="script.js"></script>
 </body>
 </html>
