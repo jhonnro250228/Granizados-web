@@ -189,17 +189,6 @@ if ("serviceWorker" in navigator) {
 }
 </script>
 <audio id="soundAdd" src="./audio/pop.mp3" preload="auto"></audio>
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-
-<script>
-window.OneSignalDeferred = window.OneSignalDeferred || [];
-
-OneSignalDeferred.push(async function(OneSignal) {
-
-  await OneSignal.init({
-    appId: "36ba7837-e97b-4412-9559-21e5afefe114",
-  });
-});
 </script>
 <script src="script.js"></script>
 </body>
