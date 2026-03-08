@@ -39,12 +39,15 @@
             <button onclick="filtrar('all')">Todos</button>
             <button onclick="filtrar('BonBonBum')">BonBonBum</button>
             <button onclick="filtrar('Maracuyá')">Maracuyá</button>
+            <button onclick="filtrar('Lulo')">Lulo</button>
+            <button onclick="filtrar('Mora Azul')">Mora Azul</button>
+            <button onclick="filtrar('Mango Biche')">Mango Biche</button>
         </div>
 
         <div class="menu-grid">
 
             <div class="card" data-sabor="BonBonBum">
-                <img src="img/granizado.jpeg">
+                <img src="img/bonbonbum.png">
                 <h3>🍒🍬 BONBONBUM</h3>
                 <p>
                     ❄️ Granizado sabor BonBonBum<br>
@@ -53,13 +56,13 @@
                     😍 Dulce, refrescante y adictivo<br>
                 </p>
                     <div class="acciones">
-                        <button type="button" onclick="agregarCarrito('BonBonBum', 8000, 'img/granizado.jpeg')">Agregar</button>
+                        <button type="button" onclick="agregarCarrito('BonBonBum', 8000, 'img/bonbonbum.png')">Agregar</button>
                         <button onclick="quitarProducto('BonBonBum', 8000)">－</button>
                     </div>
             </div>
         
             <div class="card" data-sabor="Maracuyá">
-                <img src="img/granizado.jpeg">
+                <img src="img/maracuya.JPG">
                 <h3>🥭🍋🌶️ MARACUYÁ EXTREMO</h3>
                 <p>
                     ❄️ Granizado sabor maracuyá<br>
@@ -68,8 +71,53 @@
                     🤯 ¡Una mezcla loca de ácido y dulce!<br>
                 </p> 
                     <div class="acciones">
-                        <button type="button" onclick="agregarCarrito('Maracuyá', 8000, 'img/granizado.jpeg')">Agregar</button>
+                        <button type="button" onclick="agregarCarrito('Maracuyá', 8000, 'img/maracuya.JPG')">Agregar</button>
                         <button onclick="quitarProducto('Maracuyá', 8000)">－</button>
+                    </div>    
+            </div>
+
+            <div class="card" data-sabor="Lulo">
+                <img src="img/lulo.png">
+                <h3>🍊LULO</h3>
+                <p>
+                    ❄️ Granizado sabor Lulo<br>
+                    💣 Con perlas explosivas mango limón<br>
+                    🔥🍭 + chupeta de mango con Tajín<br>
+                    🤯 ¡Dulce, acido y refrescante!<br>
+                </p> 
+                    <div class="acciones">
+                        <button type="button" onclick="agregarCarrito('Lulo', 8000, 'img/lulo.png')">Agregar</button>
+                        <button onclick="quitarProducto('Lulo', 8000)">－</button>
+                    </div>    
+            </div>
+
+            <div class="card" data-sabor="Mora Azul">
+                <img src="img/mora azul.JPG">
+                <h3>🫐MORA AZUL🫐</h3>
+                <p>
+                    ❄️ Granizado sabor Mora Azul<br>
+                    💣 Con perlas explosivas de cereza<br>
+                    🔥🍭 + chupeta de mango con Tajín o de labios rojos<br>
+                    🤯 ¡Una mezcla dulce y divertida!<br>
+                </p> 
+                    <div class="acciones">
+                        <button type="button" onclick="agregarCarrito('Mora Azul', 8000, 'img/mora azul.JPG')">Agregar</button>
+                        <button onclick="quitarProducto('Mora Azul', 8000)">－</button>
+                    </div>    
+            </div>
+
+            <div class="card" data-sabor="Mango Biche">
+                <img src="img/mango biche.png">
+                <h3>🥭🍋MANGO BICHE</h3>
+                <p>
+                    ❄️ Granizado sabor Mango biche<br>
+                    💣 Con perlas explosivas mango limon<br>
+                    🔥🍭 + chupeta de mango con Tajín o de labios rojos<br>
+                    🤯 ¡Una mezcla acida y refrescante!<br>
+                </p> 
+                    <div class="acciones">
+                        <button type="button" onclick="agregarCarrito('Mango Biche', 8000, 'img/mango biche.png')">Agregar</button>
+                        <button onclick="quitarProducto('Mango Biche', 8000)">－</button>
                     </div>    
             </div>
 
@@ -97,6 +145,9 @@
                 <select id="producto">
                     <option>BonBonBum</option>
                     <option>Mayacuya</option>
+                    <option>Lulo</option>
+                    <option>Mora Azul</option>
+                    <option>Mango biche</option>
                 </select>
 
                 <label>Topping</label>
