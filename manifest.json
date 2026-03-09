@@ -1,15 +1,12 @@
 {
   "name": "MAR-ICE Granizados",
   "short_name": "MAR-ICE",
-
-  "start_url": "./",
+  "start_url": "./index.html",
   "scope": "./",
-
   "display": "standalone",
   "background_color": "#00aaff",
   "theme_color": "#25D366",
   "orientation": "portrait",
-
   "icons": [
     {
       "src": "./img/icono-192.png",

@@ -1,3 +1,29 @@
+// PEDIR PERMISO DE NOTIFICACIONES
+if ("Notification" in window) {
+
+  if (Notification.permission !== "granted") {
+    Notification.requestPermission();
+  }
+}
+
+function mostrarNotificacion(titulo, mensaje) {
+
+  const sonido = document.getElementById("soundAdd");
+
+  if (sonido) {
+    sonido.play();
+  }
+
+  if (Notification.permission === "granted") {
+
+    new Notification(titulo, {
+      body: mensaje,
+      icon: "./img/icono-192.png"
+    });
+
+  }
+
+}
 // ============================
 // ESTADO INICIAL
 // ============================
@@ -67,6 +93,14 @@ function agregarCarrito(nombre, precio, imagen){
 
   document.getElementById("carritoLista").classList.remove("hidden");
   animarCarrito();
+
+  carrito.push({nombre, precio});
+  actualizarCarrito();
+
+  mostrarNotificacion(
+    "Producto agregado 🍧",
+    nombre + " fue agregado al carrito"
+  );
 
 // 🔊 SONIDO
   const audio = document.getElementById("soundAdd");
@@ -189,17 +223,39 @@ function guardarEnSheets(datos){
 //===================
 let deferredPrompt;
 
+const btn = document.getElementById("btnInstalar");
+
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredPrompt = e;
-
-  const btn = document.getElementById("btnInstalar");
+  botonInstalar.style.display = "block";
   btn.hidden = false;
 
   btn.addEventListener("click", () => {
     deferredPrompt.prompt();
     deferredPrompt.userChoice.then(() => {
       btn.hidden = true;
+  botonInstalar.addEventListener("click", async () => {
+
+  botonInstalar.style.display = "none";
+
+  deferredPrompt.prompt();
+
+  const { outcome } = await deferredPrompt.userChoice;
+
+  if (outcome === "accepted") {
+
+    console.log("App instalada");
+
+  } else {
+
+    console.log("Instalación cancelada");
+
+  }
+
+  deferredPrompt = null;
+
+});   
     });
   });
 });
@@ -209,5 +265,50 @@ window.addEventListener("load", ()=>{
   setTimeout(()=>{
     document.getElementById("splash").style.display="none";
   },1200);
+});
+
+// PROMOCION AUTOMATICA
+setTimeout(() => {
+
+  mostrarNotificacion(
+    "Promo MAR-ICE 🍧",
+    "Hoy 2x1 en granizados de maracuyá 😋"
+  );
+
+}, 30000);
+
+
+const botonInstalar = document.getElementById("btnInstalar");
+
+window.addEventListener("beforeinstallprompt", (e) => {
+
+  e.preventDefault();
+
+  deferredPrompt = e;
+
+  botonInstalar.style.display = "block";
+
+});
+
+botonInstalar.addEventListener("click", async () => {
+
+  botonInstalar.style.display = "none";
+
+  deferredPrompt.prompt();
+
+  const { outcome } = await deferredPrompt.userChoice;
+
+  if (outcome === "accepted") {
+
+    console.log("App instalada");
+
+  } else {
+
+    console.log("Instalación cancelada");
+
+  }
+
+  deferredPrompt = null;
+
 });
 
