@@ -261,11 +261,14 @@ window.addEventListener("beforeinstallprompt", (e) => {
 });
 
 // ===== SPLASH AUTO OCULTAR =====
-window.addEventListener("load", ()=>{
-  setTimeout(()=>{
-    document.getElementById("splash").style.display="none";
-  },1200);
-});
+window.addEventListener("load", () => {
+setTimeout(() => {
+const splash = document.getElementById("splash-screen")
+if(splash){
+splash.style.display="none"
+}
+},1500)
+})
 
 // PROMOCION AUTOMATICA
 setTimeout(() => {
