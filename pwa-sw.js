@@ -1,4 +1,4 @@
-const CACHE = "marice-v3";
+const CACHE = "marice-v4";
 
 const archivos = [
   "./",

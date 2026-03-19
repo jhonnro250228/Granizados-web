@@ -1,6 +1,7 @@
-// PEDIR PERMISO DE NOTIFICACIONES
+// ============================
+// PEDIR PERMISO NOTIFICACIONES
+// ============================
 if ("Notification" in window) {
-
   if (Notification.permission !== "granted") {
     Notification.requestPermission();
   }
@@ -11,79 +12,37 @@ function mostrarNotificacion(titulo, mensaje) {
   const sonido = document.getElementById("soundAdd");
 
   if (sonido) {
-    sonido.play();
+    sonido.currentTime = 0;
+    sonido.play().catch(()=>{});
   }
 
   if (Notification.permission === "granted") {
 
-    new Notification(titulo, {
+    new Notification(titulo,{
       body: mensaje,
       icon: "./img/icono-192.png"
     });
 
   }
-
 }
+
 // ============================
-// ESTADO INICIAL
+// CARRITO
 // ============================
+
 let carrito  = JSON.parse(localStorage.getItem("carrito")) || {};
 let total    = parseInt(localStorage.getItem("total")) || 0;
 let contador = parseInt(localStorage.getItem("contador")) || 0;
 
 actualizarUI();
 
-
-// ============================
-// FORMULARIO (Sheets + WhatsApp)
-// ============================
-document.getElementById("pedidoForm").addEventListener("submit", function(e){
-
-  e.preventDefault();
-
-  const nombre   = document.getElementById("nombre").value;
-  const telefono = document.getElementById("telefono").value;
-  const producto = document.getElementById("producto").value;
-  const topping  = document.getElementById("Topping").value;
-  const chupeta  = document.getElementById("Chupeta").value;
-  const mensaje  = document.getElementById("Mensaje").value;
-
-  const datos = { nombre, telefono, producto, topping, chupeta, mensaje, total };
-
-  guardarEnSheets(datos);
-
-  const texto = `
-Hola soy ${nombre}
-Teléfono: ${telefono}
-Producto: ${producto}
-Topping: ${topping}
-Chupeta: ${chupeta}
-Mensaje: ${mensaje}
-Total: $${total}
-`;
-
-  window.open("https://wa.me/573104224157?text=" + encodeURIComponent(texto), "_blank");
-  alert("Pedido enviado ✅");
-});
-
-
-// ============================
-// FILTRAR
-// ============================
-function filtrar(sabor){
-  document.querySelectorAll(".card").forEach(card=>{
-    card.style.display = (sabor==="all" || card.dataset.sabor===sabor) ? "block":"none";
-  });
-}
-
-
-// ============================
-// CARRITO
-// ============================
 function agregarCarrito(nombre, precio, imagen){
-  
-  if(carrito[nombre]) carrito[nombre].cantidad++;
-  else carrito[nombre] = {precio, cantidad:1, imagen};
+
+  if(carrito[nombre]){
+    carrito[nombre].cantidad++;
+  } else {
+    carrito[nombre] = {precio, cantidad:1, imagen};
+  }
 
   total += precio;
   contador++;
@@ -92,20 +51,18 @@ function agregarCarrito(nombre, precio, imagen){
   actualizarUI();
 
   document.getElementById("carritoLista").classList.remove("hidden");
-  animarCarrito();
-
-  carrito.push({nombre, precio});
-  actualizarCarrito();
 
   mostrarNotificacion(
     "Producto agregado 🍧",
     nombre + " fue agregado al carrito"
   );
+const audio = document.getElementById("soundAdd");
 
-// 🔊 SONIDO
-  const audio = document.getElementById("soundAdd");
-  audio.currentTime = 0;
-  audio.play().catch(()=>{});
+if(audio){
+audio.pause();
+audio.currentTime = 0;
+audio.play().catch(()=>{});
+}
 }
 
 function quitarProducto(nombre){
@@ -117,173 +74,160 @@ function quitarProducto(nombre){
 
   carrito[nombre].cantidad--;
 
-  if(carrito[nombre].cantidad<=0) delete carrito[nombre];
+  if(carrito[nombre].cantidad <= 0){
+    delete carrito[nombre];
+  }
 
   guardarStorage();
   actualizarUI();
 }
 
 function vaciarCarrito(){
+
   carrito = {};
   total = 0;
   contador = 0;
+
   guardarStorage();
   actualizarUI();
 }
 
-
-// ============================
-// STORAGE
-// ============================
 function guardarStorage(){
+
   localStorage.setItem("carrito", JSON.stringify(carrito));
   localStorage.setItem("total", total);
   localStorage.setItem("contador", contador);
+
 }
 
-
-// ============================
-// UI
-// ============================
 function actualizarUI(){
 
   document.getElementById("total").textContent = total;
   document.getElementById("contador").textContent = contador;
 
   const items = document.getElementById("items");
-  items.innerHTML="";
+
+  items.innerHTML = "";
 
   for(let nombre in carrito){
 
-    const div=document.createElement("div");
-    div.className="item-carrito";
+    const div = document.createElement("div");
 
-    div.innerHTML=`
+    div.className = "item-carrito";
+
+    div.innerHTML = `
       <img src="${carrito[nombre].imagen}">
       <span>${carrito[nombre].cantidad}x ${nombre}</span>
       <button onclick="quitarProducto('${nombre}')">x</button>
     `;
 
     items.appendChild(div);
+
   }
+
 }
 
+// ============================
+// FILTROS
+// ============================
+
+function filtrar(sabor){
+
+  document.querySelectorAll(".card").forEach(card=>{
+
+    card.style.display =
+      (sabor==="all" || card.dataset.sabor===sabor)
+      ? "block"
+      : "none";
+
+  });
+
+}
 
 // ============================
 // TOGGLE CARRITO
 // ============================
+
+function toggleCarrito(){
+  const carrito = document.getElementById("carritoLista");
+  carrito.classList.toggle("hidden");
+
+
 document.getElementById("btnCarrito")
-.addEventListener("click", ()=> {
-  document.getElementById("carritoLista").classList.toggle("hidden");
+.addEventListener("click", ()=>{
+
 });
-
-
-// ============================
-// ANIMACIÓN
-// ============================
-function animarCarrito(){
-  const btn=document.querySelector(".carrito");
-  btn.style.transform="scale(1.2)";
-  setTimeout(()=>btn.style.transform="scale(1)",150);
 }
 
+// ============================
+// ENVIAR PEDIDO WHATSAPP
+// ============================
 
-// ============================
-// WHATSAPP DESDE CARRITO
-// ============================
 function enviarPedido(){
 
-  if(contador===0) return alert("Agrega productos primero 🙂");
+  if(contador===0){
+    alert("Agrega productos primero 🙂");
+    return;
+  }
 
-  let msg="Hola, quiero pedir:%0A%0A";
+  let msg = "Hola, quiero pedir:%0A%0A";
 
   for(let n in carrito){
-    msg+=`${carrito[n].cantidad}x ${n}%0A`;
-  }
 
-  msg+=`%0ATotal: $${total}`;
-
-  window.open(`https://wa.me/573104224157?text=${msg}`,"_blank");
-}
-
-
-// ============================
-// GOOGLE SHEETS
-// ============================
-function guardarEnSheets(datos){
-
-  fetch("https://script.google.com/macros/s/AKfycbyarUC47CH20wCIYY9kl7S4oG5XYrs0hH6pHeOshgCdfvJDxjx7HQS-kBqq62LiQvUr/exec",{
-    method:"POST",
-    body:JSON.stringify(datos)
-  });
-}
-
-//===================
-// BOTON INSTALAR APP
-//===================
-let deferredPrompt;
-
-const btn = document.getElementById("btnInstalar");
-
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  botonInstalar.style.display = "block";
-  btn.hidden = false;
-
-  btn.addEventListener("click", () => {
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(() => {
-      btn.hidden = true;
-  botonInstalar.addEventListener("click", async () => {
-
-  botonInstalar.style.display = "none";
-
-  deferredPrompt.prompt();
-
-  const { outcome } = await deferredPrompt.userChoice;
-
-  if (outcome === "accepted") {
-
-    console.log("App instalada");
-
-  } else {
-
-    console.log("Instalación cancelada");
+    msg += `${carrito[n].cantidad}x ${n}%0A`;
 
   }
 
-  deferredPrompt = null;
+  msg += `%0ATotal: $${total}`;
 
-});   
-    });
-  });
-});
-
-// ===== SPLASH AUTO OCULTAR =====
-window.addEventListener("load", () => {
-setTimeout(() => {
-const splash = document.getElementById("splash-screen")
-if(splash){
-splash.style.display="none"
-}
-},1500)
-})
-
-// PROMOCION AUTOMATICA
-setTimeout(() => {
-
-  mostrarNotificacion(
-    "Promo MAR-ICE 🍧",
-    "Hoy 2x1 en granizados de maracuyá 😋"
+  window.open(
+    `https://wa.me/573104224157?text=${msg}`,
+    "_blank"
   );
 
-}, 30000);
+}
 
+// ============================
+// FORMULARIO
+// ============================
+
+const scriptURL = "https://script.google.com/macros/s/AKfycbzFrREWEeyUEfQgldRrhvHLJQOCcVp-m594OUpWw-arZvLoqx20LZBfKi5CfDONw1mc/exec";
+
+document.getElementById("pedidoForm").addEventListener("submit", e => {
+
+  e.preventDefault();
+
+  const data = {
+    nombre: document.getElementById("nombre").value,
+    telefono: document.getElementById("telefono").value,
+    producto: document.getElementById("producto").value,
+    topping: document.getElementById("Topping").value,
+    chupeta: document.getElementById("Chupeta").value,
+    mensaje: document.getElementById("Mensaje").value
+  };
+
+  fetch(scriptURL, {
+    method: "POST",
+    body: JSON.stringify(data)
+  })
+  .then(res => res.text())
+  .then(() => {
+    alert("Pedido enviado correctamente 😊");
+    document.getElementById("pedidoForm").reset();
+  })
+  .catch(err => console.error("Error:", err));
+
+});
+
+// ============================
+// BOTON INSTALAR APP
+// ============================
+
+let deferredPrompt;
 
 const botonInstalar = document.getElementById("btnInstalar");
 
-window.addEventListener("beforeinstallprompt", (e) => {
+window.addEventListener("beforeinstallprompt",(e)=>{
 
   e.preventDefault();
 
@@ -293,25 +237,57 @@ window.addEventListener("beforeinstallprompt", (e) => {
 
 });
 
-botonInstalar.addEventListener("click", async () => {
+botonInstalar.addEventListener("click", async ()=>{
 
-  botonInstalar.style.display = "none";
+  botonInstalar.style.display="none";
 
   deferredPrompt.prompt();
 
   const { outcome } = await deferredPrompt.userChoice;
 
-  if (outcome === "accepted") {
-
+  if(outcome==="accepted"){
     console.log("App instalada");
-
   } else {
-
     console.log("Instalación cancelada");
-
   }
 
   deferredPrompt = null;
 
 });
+
+// ============================
+// SPLASH
+// ============================
+
+window.addEventListener("load", function(){
+
+  const splash = document.getElementById("splash");
+
+  setTimeout(function(){
+
+    if(splash){
+      splash.style.display = "none";
+    }
+
+  },1500);
+
+});
+
+//==============================
+//CLICK PARA CERRAR CARRITO 
+//==============================
+
+document.addEventListener("click", function(e){
+
+const carrito = document.getElementById("carritoLista");
+const boton = document.getElementById("btnCarrito");
+
+if(!carrito.contains(e.target) && !boton.contains(e.target)){
+  carrito.classList.add("hidden");
+}
+
+});
+
+
+
 

@@ -9,17 +9,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#ff4d6d">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="MAR-ICE">
     <link rel="apple-touch-icon" href="./img/icono-192.png">
     <link rel="icon" href="img/icono-192.png">
 </head>
 <body>
-    <div id="splash">
-        <img src="img/icono-512.png" alt="MAR-ICE">
-        <h1>MAR ICE</h1>
-    </div>
     <section class="hero">
        <img src="img/mar-ice.png" class="hero-img">
 
@@ -125,17 +121,6 @@
                         <button onclick="quitarProducto('Mango Biche', 8000)">－</button>
                     </div>    
             </div>
-
-            <div class="carrito">
-                <button id="btnCarrito">🛒</button>
-                <span id="contador" class="badge">0</span>
-                $<span id="total">0</span>
-                <div id="carritoLista" class="carrito-lista hidden">
-                    <div id="items"></div>
-                    <button onclick="vaciarCarrito()">Vaciar</button>
-                    <button onclick="enviarPedido()">Enviar pedido</button>
-                </div>
-            </div>
         </div>
 
         <h2>🔥 Pide tu granizado ahora</h2>
@@ -149,7 +134,7 @@
                 <label>Producto</label>
                 <select id="producto">
                     <option>BonBonBum</option>
-                    <option>Mayacuya</option>
+                    <option>Maracuyá</option>
                     <option>Lulo</option>
                     <option>Mora Azul</option>
                     <option>Mango biche</option>
@@ -187,16 +172,29 @@
     class="whatsapp-float">
     <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
 </a>
-<button id="btnInstalar" hidden>📲 Instalar App</button>
+<!--
 <script>
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("./pwa-sw.js");
 }
 </script>
-<audio id="soundAdd" src="./audio/pop.mp3" preload="auto"></audio>
-<script src="script.js"></script>
+-->
+<audio id="soundAdd" preload="auto">
+<source src="./audio/pop.mp3" type="audio/mpeg">
+</audio>
 <button id="btnInstalar" style="display:none;">
 📲 Instalar App MAR-ICE
 </button>
+<div class="carrito">
+    <button id="btnCarrito" onclick="toggleCarrito()">🛒</button>
+    <span id="contador" class="badge">0</span>
+    $<span id="total">0</span>
+    <div id="carritoLista" class="carrito-lista hidden">
+        <div id="items"></div>
+        <button onclick="vaciarCarrito()">Vaciar</button>
+        <button onclick="enviarPedido()">Enviar pedido</button>
+    </div>
+</div>
+<script src="script.js"></script>
 </body>
 </html>
